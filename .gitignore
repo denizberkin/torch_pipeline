@@ -11,3 +11,4 @@
 /data/pretrained_models
 /outputs
 /models
+/.mypy_cache
