@@ -1,0 +1,13 @@
+# file extensions
+*.pyc
+*.pth
+*.png
+*.csv
+
+
+# folders
+/__pycache__
+/data/datasets
+/data/pretrained_models
+/outputs
+/models
