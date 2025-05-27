@@ -1,4 +1,4 @@
-from dataclasses import fields, is_dataclass
+from dataclasses import dataclass, fields, is_dataclass
 from typing import List, Union, get_args, get_origin, get_type_hints
 
 import omegaconf as oc
@@ -10,8 +10,13 @@ from utils.schema import ConfigSchema
 def load_config(file_path: Union[str, List[str]], strict: bool = False) -> Union[oc.DictConfig, ConfigSchema]:
     """
     Load a configuration file and return it as an omegaconf DictConfig object.
-    :param file_path (str or List[str]): Path to the configuration file(s).
-    :param strict (bool): If True, will enforce strict checking on the config.
+    ### Parameters
+        - file_path: Path to the configuration file(s).
+        - strict: whether to enable strict checking of config, raise `KeyError` if issues found.
+    ### Returns
+        - omegaconf.DictConfig object which has the same structure as ConfigSchema.
+    ### Signature
+        - (union[str, list[str]], bool) -> DictConfig | ConfigSchema
     """
     if isinstance(file_path, str):
         file_path = [file_path]
@@ -35,7 +40,17 @@ def add_strict_checking(config: oc.DictConfig) -> oc.DictConfig:
     return merged
 
 
-def validate_keys(schema, merged: oc.DictConfig, path: str = "") -> None:
+def validate_keys(schema: type, merged: oc.DictConfig, path: str = "") -> None:
+    """
+    Recursively validate keys in the merged configuration against the schema.
+    ### Parameters
+        - schema: The schema to validate against, a dataclass or ConfigSchema.
+        - merged: The merged configuration to validate.
+    ### Returns
+        - None, raises KeyError if any required key is missing.
+    ### Signature
+        - (type, DictConfig, str) -> None
+    """
     logger = get_logger()
     for field in fields(schema):
         key = field.name
