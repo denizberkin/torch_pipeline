@@ -4,7 +4,7 @@ from losses import *
 from utils.config import load_config
 
 # from losses.build import build_loss
-from utils.utils import find_class_by_name
+from utils.utils import find_class_by_alias
 
 
 def main():

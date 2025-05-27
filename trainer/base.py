@@ -1,10 +1,12 @@
 from abc import ABC, abstractmethod
 from collections import defaultdict
+from typing import Dict
 
 import torch
 import torch.nn as nn
 from tqdm import tqdm
 
+from metrics.base import BaseMetric
 from utils.logger import get_logger
 
 
@@ -14,23 +16,27 @@ class BaseTrainer(ABC):
         model: nn.Module,
         optimizer: torch.optim.Optimizer,
         losses: nn.Module,
+        metrics: Dict[str, BaseMetric],
         device: torch.device,
         tracker=None,
         **kwargs,
     ) -> None:
+        # optimizer, losses,
         self.model = model.to(device)
         self.optimizer = optimizer
-        self.loss_fn = losses
+        self.losses = losses
         self.device = device
-        self.metrics = defaultdict(list)
+        self.metrics = metrics
         self.exp_tracker = tracker
+        self.metrics_history = defaultdict(list)
+        self.kwargs = kwargs
 
     @abstractmethod
-    def train_epoch(self, dataloader):
+    def train_epoch(self, dataloader: torch.utils.data.DataLoader):
         pass
 
     @abstractmethod
-    def validate(self, dataloader):
+    def validate(self, dataloader: torch.utils.data.DataLoader):
         pass
 
     def train(
@@ -48,6 +54,6 @@ class BaseTrainer(ABC):
                 self.validate(val_loader)
             if self.exp_tracker and epoch % log_interval == 0:
                 logger.info(f"Logging metrics for epoch {epoch}.")
-                self.exp_tracker.log_epoch(epoch, self.metrics)
-            self.metrics.clear()
+                self.exp_tracker.log_epoch(epoch, self.metrics_history)
+            self.metrics_history.clear()
         logger.info("Training completed.")

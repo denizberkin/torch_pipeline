@@ -9,7 +9,7 @@ class FocalLoss(nn.Module, BaseLoss):
         super().__init__()
         self.gamma = gamma
 
-    def forward(self, inputs, targets):
+    def __call__(self, inputs, targets):
         ce_loss = nn.functional.cross_entropy(inputs, targets, reduction="none")
         pt = torch.exp(-ce_loss)
         return ((1 - pt) ** self.gamma * ce_loss).mean()
