@@ -4,7 +4,7 @@ import torch.nn as nn
 from losses.base import BaseLoss
 
 
-class FocalLoss1(nn.Module, BaseLoss):
+class FocalLoss(nn.Module, BaseLoss):
     def __init__(self, gamma=2):
         super().__init__()
         self.gamma = gamma
@@ -15,4 +15,7 @@ class FocalLoss1(nn.Module, BaseLoss):
         return ((1 - pt) ** self.gamma * ce_loss).mean()
 
     def __str__(self):
+        return "focal_loss"
+
+    def get_alias(self):
         return "focal_loss"
