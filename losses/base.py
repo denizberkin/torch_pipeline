@@ -1,4 +1,6 @@
 class BaseLoss:
+    """Base class for all losses, this is to ensure spesific mechanisms that should apply to all."""
+
     def __init_subclass__(cls, **kwargs):
         """Ensure all subclasses implement get_alias method"""
         super().__init_subclass__(**kwargs)

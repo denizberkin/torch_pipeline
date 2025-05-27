@@ -3,6 +3,7 @@ from typing import List, Union, get_args, get_origin, get_type_hints
 
 import omegaconf as oc
 
+from utils.logger import get_logger
 from utils.schema import ConfigSchema
 
 
@@ -35,6 +36,7 @@ def add_strict_checking(config: oc.DictConfig) -> oc.DictConfig:
 
 
 def validate_keys(schema, merged: oc.DictConfig, path: str = "") -> None:
+    logger = get_logger()
     for field in fields(schema):
         key = field.name
         sub_path = f"{path}.{key}" if path else key
@@ -42,6 +44,7 @@ def validate_keys(schema, merged: oc.DictConfig, path: str = "") -> None:
         is_optional = get_origin(type_hint) is Union and type(None) in get_args(type_hint)  # check if field is optional
         if key not in merged:
             if not is_optional:
+                logger.error(f"KeyError: Missing required key '{sub_path}' in config.")
                 raise KeyError(f"Missing required key '{sub_path}' in config.")
             continue  # skip optional keys, no need to check further
 

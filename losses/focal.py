@@ -5,7 +5,7 @@ from losses.base import BaseLoss
 
 
 class FocalLoss(nn.Module, BaseLoss):
-    def __init__(self, gamma=2):
+    def __init__(self, gamma=2, **kwargs):
         super().__init__()
         self.gamma = gamma
 
@@ -13,9 +13,6 @@ class FocalLoss(nn.Module, BaseLoss):
         ce_loss = nn.functional.cross_entropy(inputs, targets, reduction="none")
         pt = torch.exp(-ce_loss)
         return ((1 - pt) ** self.gamma * ce_loss).mean()
-
-    def __str__(self):
-        return "focal_loss"
 
     def get_alias(self):
         return "focal_loss"
