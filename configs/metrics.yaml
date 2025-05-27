@@ -1,0 +1,7 @@
+metrics:
+  - name: "accuracy"
+  - name: "f1_score"
+    kwargs:
+      average: "macro"
+  - name: "precision"
+  - name: "recall"

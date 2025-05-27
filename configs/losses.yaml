@@ -1,0 +1,7 @@
+losses:
+  - name: focal_loss2
+    weight: 1.0
+  - name: focal_loss1
+    weight: 0.5
+    kwargs:
+      gamma: 2
