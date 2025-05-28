@@ -1,2 +1,5 @@
-dataset:
-  - name: "mnist"
+data:
+  task: classification
+  root: /data/datasets
+  batch_size: 32
+  validation_split: 0.2

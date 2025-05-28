@@ -14,7 +14,6 @@ def load_mnist_data(bs: int = 16):
 
     train_dataset = datasets.MNIST(root="./data/datasets", train=True, download=True, transform=transform)
     test_dataset = datasets.MNIST(root="./data/datasets", train=False, download=True, transform=transform)
-
     train_loader = torch.utils.data.DataLoader(dataset=train_dataset, batch_size=bs, shuffle=True)
     test_loader = torch.utils.data.DataLoader(dataset=test_dataset, batch_size=1, shuffle=False)
 
@@ -58,7 +57,12 @@ def train_model(
         avg_losses.append(avg_loss)
         accuracy = (torch.tensor(all_labels) == torch.tensor(all_preds)).float().mean().item() * 100
         f1 = f1_score(all_labels, all_preds, average="weighted")
-        tqdm.write(f"Epoch {epoch+1}/{num_epochs}, Loss: {avg_loss:.4f}, Accuracy: {accuracy:.2f}%, F1 Score: {f1:.4f}")
+        tqdm.write(
+            f"Epoch {epoch+1}/{num_epochs}, \
+                   Loss: {avg_loss:.4f}, \
+                   Accuracy: {accuracy:.2f}%, \
+                   F1 Score: {f1:.4f}"
+        )
 
     return model, avg_losses
 

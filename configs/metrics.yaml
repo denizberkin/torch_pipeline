@@ -1,14 +1,14 @@
 metrics:
-  - name: "accuracy"
-  - name: "precision"
-  - name: "recall"
-  - name: "f1"
+  - name: accuracy
+  - name: precision
+  - name: recall
+  - name: f1
     kwargs:
-      average: "macro"
-  - name: "map"
-  - name: "iou"
-  - name: "mse"
-  - name: "mae"
-  - name: "mape"
-  - name: "nrmse"
-  - name: "edit_distance"
+      average: macro
+  - name: map
+  - name: iou
+  - name: mse
+  - name: mae
+  - name: mape
+  - name: nrmse
+  - name: edit_distance

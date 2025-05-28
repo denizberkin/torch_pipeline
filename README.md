@@ -16,9 +16,9 @@ my_nn_pipeline/
 │   ├── __init__.py
 │   ├── build.py
 │   └── ...
-├── experiments/            # entrypoints
-│   ├── train.py
-│   └── evaluate.py
+├── experiments/
+│   ├── __init__.py
+│   └── mlflow.py
 ├── losses/
 │   ├── __init__.py
 │   ├── build.py
