@@ -55,5 +55,17 @@ class BaseTrainer(ABC):
             if self.exp_tracker and epoch % log_interval == 0:
                 logger.info(f"Logging metrics for epoch {epoch}.")
                 self.exp_tracker.log_epoch(epoch, self.metrics_history)
+            epoch_metrics = self.average_metrics()
+            tqdm.write(f"Epoch {epoch} metrics: {epoch_metrics}")
             self.metrics_history.clear()
         logger.info("Training completed.")
+
+    def average_metrics(self) -> dict:
+        """
+        Average the metrics over the history.
+        """
+        averaged_metrics = defaultdict(float)
+        bs = self.metrics_history.pop("batch_size")
+        for i in range(len(bs)):
+            for name, values in self.metrics_history.items():
+                averaged_metrics[name] += values[i].sum() / len(bs[i])
