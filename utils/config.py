@@ -58,6 +58,7 @@ def validate_keys(schema: type, merged: oc.DictConfig, path: str = "") -> None:
         type_hint = get_type_hints(schema).get(key)  # mostly == obj.__annotations__
         is_optional = get_origin(type_hint) is Union and type(None) in get_args(type_hint)  # check if field is optional
         if key not in merged:
+            print(f"Key '{key}' not found in merged config at path '{sub_path}'")
             if not is_optional:
                 logger.error(f"KeyError: Missing required key '{sub_path}' in config.")
                 raise KeyError(f"Missing required key '{sub_path}' in config.")

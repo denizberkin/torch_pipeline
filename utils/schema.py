@@ -5,20 +5,20 @@ from typing import Any, Dict, List, Optional
 @dataclass
 class LossConfig:
     name: str
-    weight: Optional[float]
-    kwargs: Optional[Dict[str, Any]]
+    weight: Optional[float] = None
+    kwargs: Optional[Dict[str, Any]] = None
 
 
 @dataclass
 class MetricConfig:
     name: str
-    kwargs: Optional[Dict[str, Any]]
+    kwargs: Optional[Dict[str, Any]] = None
 
 
 @dataclass
 class DatasetConfig:
     name: str
-    kwargs: Optional[Dict[str, Any]]
+    kwargs: Optional[Dict[str, Any]] = None
 
 
 @dataclass

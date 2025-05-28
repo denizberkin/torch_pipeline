@@ -1,6 +1,6 @@
 metrics:
   - name: "accuracy"
-  - name: "f1_score"
+  - name: "f1"
     kwargs:
       average: "macro"
   - name: "precision"

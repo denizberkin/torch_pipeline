@@ -1,7 +1,8 @@
+# for predefined losses, see: /losses/build.py
 losses:
-  - name: focal_loss2
+  - name: bce
     weight: 1.0
-  - name: focal_loss1
+  - name: focal_loss
     weight: 0.5
     kwargs:
       gamma: 2
