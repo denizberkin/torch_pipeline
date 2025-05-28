@@ -16,14 +16,14 @@ def build_loss(cfg_list) -> dict:
     logger = get_logger()
     losses = {}
     predefined_losses = {
-        "cross_entropy": nn.CrossEntropyLoss,
+        "ce": nn.CrossEntropyLoss,
         "bce": nn.BCELoss,  # bce
         "bce_with_logits": nn.BCEWithLogitsLoss,  # bce + sigmoid
         "mse": nn.MSELoss,
     }
     for cfg in cfg_list:
         alias = cfg.name
-        weight = cfg.weight if hasattr(cfg, "weight") else 1.0  # weight is optional
+        weight = cfg.weight if getattr(cfg, "weight", None) else 1.0  # weight is optional
         if alias in predefined_losses:
             cls = predefined_losses[alias]
         else:
