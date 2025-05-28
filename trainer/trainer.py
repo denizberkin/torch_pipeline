@@ -38,5 +38,10 @@ class ClassificationTrainer(BaseTrainer):
         """
         Compute metrics for the given outputs and targets.
         """
+        current_metrics = {}
         for name, metric_data in self.metrics:
-            pass  # TODO:
+            metric_fn = metric_data["metric_fn"]
+            metric = metric_fn(outs, targets)
+            self.metrics_history[name].append(metric)  # each metric will be a list of batches
+            current_metrics[name] = metric
+        return current_metrics

@@ -3,6 +3,14 @@ from typing import Any, Dict, List, Optional
 
 
 @dataclass
+class LoggingConfig:
+    enabled: bool
+    level: str
+    log_dir: Optional[str] = None  # default: ./output/logs
+    log_file: Optional[str] = None  # default: {experiment_name}.log
+
+
+@dataclass
 class LossConfig:
     name: str
     weight: Optional[float] = None
@@ -25,6 +33,7 @@ class DatasetConfig:
 class ConfigSchema:
     seed: int
     device: str
+    logging: LoggingConfig
     losses: List[LossConfig]
     metrics: List[MetricConfig]
     dataset: List[DatasetConfig]
