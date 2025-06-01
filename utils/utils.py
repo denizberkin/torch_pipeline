@@ -32,9 +32,11 @@ def find_class_by_alias(alias: str, dir: str) -> Optional[object]:
             continue
 
         for _, cls in inspect.getmembers(module, inspect.isclass):
-            if hasattr(cls, "get_alias"):
+            if hasattr(cls, "get_alias") and "Base" not in str(cls):
                 if cls.get_alias(cls) == alias:
                     found = cls
+                if cls.get_alias(cls) == "base":  # throw another warning if they miss
+                    logger.warning(f"Class '{cls}' does not define 'get_alias' which is a must!")
     if not found:
-        logger.warning(f"Class '{alias}' not found in directory '{dir}'")
+        logger.warning(f"Class with alias '{alias}' not found in directory '{dir}'")
     return found

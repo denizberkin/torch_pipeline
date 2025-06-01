@@ -3,6 +3,8 @@ from typing import List
 import torch
 import torch.nn as nn
 
+from models.base import BaseModel
+
 
 class OuterLinearLayer(nn.Module):
     def __init__(self, in_features: int, out_features: int, rank: int = 1, bias: bool = True):
@@ -34,7 +36,7 @@ class OuterLinearLayer(nn.Module):
         return output
 
 
-class LowRankModel(nn.Module):
+class LowRankModel(BaseModel):
     def __init__(self, in_features: int, hidden_size: List[int], out_features: int, rank: int = 1):
         super(LowRankModel, self).__init__()
         self.oln1 = OuterLinearLayer(in_features, hidden_size[0], rank)
@@ -54,11 +56,11 @@ class LowRankModel(nn.Module):
         x = self.olni(x)
         return x
 
-    def get_num_params(self):
-        return sum(p.numel() for p in self.parameters())
+    def get_alias(self):
+        return "lowrank_model"
 
 
-class LinearModel(nn.Module):
+class LinearModel(BaseModel):
     def __init__(self, in_features: int, hidden_size: List[int], out_features: int):
         super(LinearModel, self).__init__()
         self.ln1 = nn.Linear(in_features, hidden_size[0])
@@ -75,5 +77,5 @@ class LinearModel(nn.Module):
         x = self.lni(x)
         return x
 
-    def get_num_params(self):
-        return sum(p.numel() for p in self.parameters())
+    def get_alias(self):
+        return "linear_model"

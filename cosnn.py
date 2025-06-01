@@ -11,7 +11,6 @@ from models.models import LinearModel, LowRankModel
 
 def load_mnist_data(bs: int = 16):
     transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.5,), (0.5,))])
-
     train_dataset = datasets.MNIST(root="./data/datasets", train=True, download=True, transform=transform)
     test_dataset = datasets.MNIST(root="./data/datasets", train=False, download=True, transform=transform)
     train_loader = torch.utils.data.DataLoader(dataset=train_dataset, batch_size=bs, shuffle=True)

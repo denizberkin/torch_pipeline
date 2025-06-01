@@ -1,6 +1,8 @@
 import logging
 import os
 import sys
+import time
+from typing import Callable
 
 import coloredlogs
 
@@ -19,7 +21,8 @@ def get_logger(path: str = None, base_level: int = logging.INFO) -> logging.Logg
             LOGGER.setLevel(base_level)
         if path:
             # remove other file handlers
-            LOGGER.removeHandler(next(filter(lambda x: isinstance(x, logging.FileHandler), LOGGER.handlers)))
+            if LOGGER.hasHandlers():
+                LOGGER.removeHandler(next(filter(lambda x: isinstance(x, logging.FileHandler), LOGGER.handlers), None))
             LOGGER.addHandler(get_file_handler(path, formatter=formatter, base_level=base_level))
         return LOGGER
 
@@ -62,3 +65,23 @@ def get_file_handler(
     file_handler.setFormatter(formatter)
 
     return file_handler
+
+
+def log_timeit(func: Callable) -> Callable:
+    def timeit_wrapper(*args, **kwargs):
+        try:
+            logger = kwargs["logger"]
+        except KeyError:
+            logger = get_logger()  # logger is Singleton, returns the original
+        start_time = time.perf_counter()
+        func_name = str(func.__name__).split("(")[0]
+        logger.critical("Function ---%s--- Started!", func_name)
+        result = func(*args, **kwargs)
+        end_time = time.perf_counter()
+        total_time = end_time - start_time
+        total_time, time_scale = (total_time, "seconds") if total_time > 0.1 else (total_time * 1000, "milliseconds")
+
+        logger.critical("Function ---%s--- Done! - Took %s %s.", func_name, total_time, time_scale)
+        return result
+
+    return timeit_wrapper

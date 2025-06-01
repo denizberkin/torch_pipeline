@@ -5,10 +5,4 @@ metrics:
   - name: f1
     kwargs:
       average: macro
-  - name: map
-  - name: iou
-  - name: mse
-  - name: mae
-  - name: mape
-  - name: nrmse
-  - name: edit_distance
+  

@@ -1,5 +1,10 @@
 data:
+  name: mnist
   task: classification
   root: /data/datasets
   batch_size: 32
-  validation_split: 0.2
+  val_split: 0.2
+  # kwargs is passed to your instance of BaseDataset, define as you like
+  kwargs:
+    val_split: 0.2
+    random_state: 42

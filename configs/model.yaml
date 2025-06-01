@@ -1,0 +1,9 @@
+model:
+  name: lowrank_model
+  pretrained: false
+  pretrained_path: null  # only fill if pretrained is true
+  kwargs:
+    in_features: 784
+    hidden_size: [128, 64]
+    out_features: 10
+    rank: 4

@@ -4,10 +4,11 @@ import torch.nn as nn
 from losses.base import BaseLoss
 
 
-class FocalLoss(nn.Module, BaseLoss):
+class FocalLoss(BaseLoss):
     def __init__(self, gamma=2, **kwargs):
         super().__init__()
         self.gamma = gamma
+        self.kwargs = kwargs
 
     def __call__(self, inputs, targets):
         ce_loss = nn.functional.cross_entropy(inputs, targets, reduction="none")
