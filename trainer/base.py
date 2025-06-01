@@ -11,12 +11,22 @@ from utils.logger import get_logger
 
 
 class BaseTrainer(ABC):
+    """
+    Base class for all trainers.
+    ### Methods:
+    - `train_epoch`: Logic for one epoch to be implemented.
+    - `validate`: Logic for validation to be implemented.
+    - `train`: Method to train the model for a number of epochs.
+    - `average_metrics`: Method to average the metrics over the `self.metrics_history`.
+    - `__call__`: Method to call the trainer.
+    """
+
     def __init__(
         self,
         model: nn.Module,
         optimizer: torch.optim.Optimizer,
         losses: nn.Module,
-        metrics: Dict[str, BaseMetric],
+        metrics: Dict[str, Dict[str, BaseMetric]],
         device: torch.device,
         tracker=None,
         **kwargs,
@@ -25,9 +35,10 @@ class BaseTrainer(ABC):
         self.model = model.to(device)
         self.optimizer = optimizer
         self.losses = losses
-        self.device = device
+        self.device = torch.device(device)
         self.metrics = metrics
         self.exp_tracker = tracker
+        self.metrics_history_epoch = defaultdict(list)
         self.metrics_history = defaultdict(list)
         self.kwargs = kwargs
 
@@ -69,3 +80,13 @@ class BaseTrainer(ABC):
         for i in range(len(bs)):
             for name, values in self.metrics_history.items():
                 averaged_metrics[name] += values[i].sum() / len(bs[i])
+
+    def __call__(
+        self,
+        epochs: int,
+        train_loader: torch.utils.data.DataLoader,
+        val_loader: torch.utils.data.DataLoader,
+        log_interval: int = 10,
+    ):
+        """Optionally call the trainer to start training."""
+        self.train(train_loader=train_loader, val_loader=val_loader, epochs=epochs, log_interval=log_interval)

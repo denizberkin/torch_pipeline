@@ -11,9 +11,9 @@ class ClassificationTrainer(BaseTrainer):
     def __init__(self, model, optimizer, losses, metrics, device, tracker=None, config=None, **kwargs) -> None:
         super().__init__(model, optimizer, losses, metrics, device, tracker, **kwargs)
 
-    def train_epoch(self, dataloader: torch.utils.data.DataLoader, epoch: int):
+    def train_epoch(self, dataloader: torch.utils.data.DataLoader):
         self.model.train()
-        for x, y in tqdm(dataloader, desc=f"Training Epoch {epoch}"):
+        for x, y in tqdm(dataloader, desc=f"...", unit="batch", total=len(dataloader)):
             x, y = x.to(self.device), y.to(self.device)
             self.optimizer.zero_grad()
             outs = self.model(x)
@@ -28,6 +28,7 @@ class ClassificationTrainer(BaseTrainer):
             for x, y in tqdm(dataloader, desc=f"Validation Epoch {epoch}"):
                 x, y = x.to(self.device), y.to(self.device)
                 outs = self.model(x)
+                outs = torch.argmax(outs, dim=1)  # FIXME: LATEST
                 self.compute_metrics(outs, y)
 
     def compute_loss(self, outs: torch.Tensor, targets: torch.Tensor) -> torch.Tensor:
@@ -49,9 +50,11 @@ class ClassificationTrainer(BaseTrainer):
         """
         current_metrics = defaultdict(float)
         self.metrics_history["batch_size"].append(outs.shape[0])
-        for name, metric_data in self.metrics:
+        for name, metric_data in self.metrics.items():
             metric_fn = metric_data["metric_fn"]
-            metric = metric_fn(outs, targets)
+            metric = metric_fn(
+                outs.detach().cpu().view(-1), targets.detach().cpu().view(-1)
+            )  # TODO: FIXME: CHECK SHAPE, SIZE, DEVICE, VIEW
             self.metrics_history[name].append(metric)  # each metric will be a list of batches
             current_metrics[name] = metric
         return current_metrics
