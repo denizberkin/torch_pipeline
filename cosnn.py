@@ -6,7 +6,7 @@ from sklearn.metrics import f1_score
 from torchvision import datasets, transforms
 from tqdm import tqdm
 
-from models.models import LinearModel, LowRankModel
+from models.fcn import LinearModel, LowRankModel
 
 
 def load_mnist_data(bs: int = 16):
@@ -62,7 +62,6 @@ def train_model(
                    Accuracy: {accuracy:.2f}%, \
                    F1 Score: {f1:.4f}"
         )
-
     return model, avg_losses
 
 
