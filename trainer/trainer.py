@@ -1,60 +1,44 @@
-from collections import defaultdict
-
 import torch
-import torch.nn as nn
 from tqdm import tqdm
 
 from trainer.base import BaseTrainer
 
 
 class ClassificationTrainer(BaseTrainer):
-    def __init__(self, model, optimizer, losses, metrics, device, tracker=None, config=None, **kwargs) -> None:
-        super().__init__(model, optimizer, losses, metrics, device, tracker, **kwargs)
+    def __init__(self, model, optimizer, losses, metrics, device, tracker=None, scheduler=None, **kwargs) -> None:
+        super().__init__(model, optimizer, losses, metrics, device, tracker, scheduler, **kwargs)
 
     def train_epoch(self, dataloader: torch.utils.data.DataLoader):
         self.model.train()
-        for x, y in tqdm(dataloader, desc=f"...", unit="batch", total=len(dataloader)):
+        total_loss = 0.0
+        pb = tqdm(dataloader, desc="Training...", unit="batch", total=len(dataloader), leave=False)
+        for step, (x, y) in enumerate(pb, 1):
             x, y = x.to(self.device), y.to(self.device)
             self.optimizer.zero_grad()
-            outs = self.model(x)
-            loss, loss_hist = self.compute_loss(outs, y)
+
+            preds = self.model(x)
+            loss = self.compute_loss(preds, y)
             loss.backward()
             self.optimizer.step()
-            self.compute_metrics(outs, y)
+            if self.scheduler is not None:
+                self.scheduler.step()
+            
+            total_loss += loss.item()
+            preds = torch.argmax(preds, dim=1)
+            self.update_metrics(preds, y, batch_size=preds.shape[0])
+            
+            avg_loss = total_loss / step
+            pb.set_postfix(loss=f"{avg_loss:.4f}")
 
-    def validate(self, dataloader: torch.utils.data.DataLoader, epoch: int):
+    @torch.no_grad()
+    def validate(self, dataloader: torch.utils.data.DataLoader):
         self.model.eval()
-        with torch.no_grad():
-            for x, y in tqdm(dataloader, desc=f"Validation Epoch {epoch}"):
-                x, y = x.to(self.device), y.to(self.device)
-                outs = self.model(x)
-                outs = torch.argmax(outs, dim=1)  # FIXME: LATEST
-                self.compute_metrics(outs, y)
-
-    def compute_loss(self, outs: torch.Tensor, targets: torch.Tensor) -> torch.Tensor:
-        """
-        Compute the loss for the given outputs and targets.
-        """
-        loss_hist = defaultdict(lambda: torch.tensor(0.0, device=self.device))
-        total_loss = 0.0
-        for name, loss_data in self.losses.items():
-            loss_fn = loss_data["loss_fn"]
-            weight = loss_data["weight"]
-            total_loss += weight * loss_fn(outs, targets)
-            loss_hist[name] = weight * loss_fn(outs, targets).detach()
-        return total_loss, loss_hist
-
-    def compute_metrics(self, outs: torch.Tensor, targets: torch.Tensor) -> None:
-        """
-        Compute metrics for the given outputs and targets.
-        """
-        current_metrics = defaultdict(float)
-        self.metrics_history["batch_size"].append(outs.shape[0])
-        for name, metric_data in self.metrics.items():
-            metric_fn = metric_data["metric_fn"]
-            metric = metric_fn(
-                outs.detach().cpu().view(-1), targets.detach().cpu().view(-1)
-            )  # TODO: FIXME: CHECK SHAPE, SIZE, DEVICE, VIEW
-            self.metrics_history[name].append(metric)  # each metric will be a list of batches
-            current_metrics[name] = metric
-        return current_metrics
+        pb = tqdm(dataloader, desc=f"Validation...", unit="batch", total=len(dataloader), leave=False)
+        for x, y in pb:
+            x, y = x.to(self.device), y.to(self.device)
+            preds = self.model(x)
+            preds = torch.argmax(preds, dim=1)
+            self.update_metrics(preds, y, preds.shape[0])
+    
+    def get_alias(self):
+        return "classification"
