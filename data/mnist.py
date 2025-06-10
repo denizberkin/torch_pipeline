@@ -1,3 +1,4 @@
+
 from sklearn.model_selection import train_test_split
 from torchvision import datasets, transforms
 
@@ -29,5 +30,4 @@ class MNISTDataset(BaseDataset):
             return datasets.MNIST(root="./data/datasets", train=False, download=True, transform=transform)
         raise ValueError(f"Expected dataset type: ['train', 'val', 'test'], got {self._type}!")
 
-    def get_alias(self):
-        return "mnist"
+    def get_alias(self): return "mnist"

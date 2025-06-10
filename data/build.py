@@ -1,9 +1,9 @@
 from torch.utils.data import DataLoader
 
-from data.base import BaseDataset
-from utils.logger import get_logger
 from utils.schema import DatasetConfig
+from data.base import BaseDataset
 from utils.utils import find_class_by_alias
+from utils.logger import get_logger
 
 
 def build_data_loaders(config: DatasetConfig, _type: str) -> DataLoader:
@@ -17,8 +17,7 @@ def build_data_loaders(config: DatasetConfig, _type: str) -> DataLoader:
     """
     logger = get_logger()
     dataset: BaseDataset = find_class_by_alias(config.name, "data")(config.root, _type, **config.kwargs)
-    logger.info(
-        f"Using {config.name} {_type} set from current module: {dataset.__class__.__name__}, module name: {__name__}"
-    )
+    logger.info(f"Using {config.name} {_type} set, module name: {__name__}")
     shuffle = True if _type == "train" else False
     return DataLoader(dataset=dataset, batch_size=config.batch_size, shuffle=shuffle)
+

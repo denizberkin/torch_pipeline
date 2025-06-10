@@ -1,5 +1,4 @@
 from abc import ABC, abstractmethod
-
 from torch.utils.data import Dataset
 
 
@@ -21,19 +20,13 @@ class BaseDataset(Dataset, ABC):
         self._type = _type  # train, val or test
 
     @abstractmethod
-    def load_data(self):
-        raise NotImplementedError
+    def load_data(self): raise NotImplementedError
 
     @abstractmethod
-    def __getitem__(self, index):
-        raise NotImplementedError
+    def __getitem__(self, index): raise NotImplementedError
 
     @abstractmethod
-    def __len__(self):
-        raise NotImplementedError
+    def __len__(self): raise NotImplementedError
 
-    def get_alias(self):
-        return "base"
-
-    def collate_fn(self, batch):
-        return batch
+    def get_alias(self): return "base"
+    def collate_fn(self, batch): return batch
