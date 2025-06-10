@@ -6,7 +6,6 @@ from typing import Any, Dict, List, Optional
 class LoggingConfig:
     enabled: bool
     level: str
-    log_dir: Optional[str] = None  # default: ./output/logs
     log_file: Optional[str] = None  # default: {experiment_name}.log
 
 
@@ -26,7 +25,6 @@ class MetricConfig:
 @dataclass
 class DatasetConfig:
     name: str
-    task: str
     root: str
     batch_size: int
     val_split: Optional[float]
@@ -34,9 +32,16 @@ class DatasetConfig:
 
 
 @dataclass
+class SchedulerConfig:
+    name: str
+    kwargs: Dict[str, Any]
+
+
+@dataclass
 class OptimConfig:
     name: str
     lr: float
+    scheduler: Optional[SchedulerConfig] = None
     kwargs: Optional[Dict[str, Any]] = None
 
 
@@ -52,7 +57,6 @@ class ModelConfig:
 class ExperimentTrackerConfig:
     enabled: bool
     name: str
-    experiment_name: str
     port: int
     kwargs: Optional[Dict[str, Any]] = None
 
@@ -60,8 +64,10 @@ class ExperimentTrackerConfig:
 @dataclass
 class TrainConfig:
     epochs: int
+    task: str
     log_interval: int
     save_interval: int
+    plot: bool
 
 
 @dataclass
@@ -76,3 +82,4 @@ class ConfigSchema:
     model: ModelConfig
     tracker: ExperimentTrackerConfig
     train: TrainConfig
+    experiment_name: Optional[str] = None
