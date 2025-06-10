@@ -11,8 +11,5 @@ class BaseLoss(ABC):
     """
 
     @abstractmethod
-    def __call__(self):
-        raise NotImplementedError
-
-    def get_alias(self):
-        return "base"
+    def __call__(self): raise NotImplementedError
+    def get_alias(self): return "base"

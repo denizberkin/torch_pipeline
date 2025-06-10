@@ -31,7 +31,7 @@ def build_metrics(cfg_list) -> Dict[str, object]:
 
         if cls is None:
             continue
-        logger.info(f"Using class '{alias}' from current module: {cls.__class__.__name__}, module name: {__name__}")
+        logger.info(f"Using class '{alias}', module name: {__name__}")
         kwargs = dict(cfg.kwargs) if getattr(cfg, "kwargs", None) else {}
         metric_fn = cls(**kwargs)
         metrics[alias] = {"metric_fn": metric_fn}  # is dict so can be extended if needed

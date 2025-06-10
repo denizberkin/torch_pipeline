@@ -25,7 +25,7 @@ def build_loss(cfg_list) -> dict:
 
         if cls is None:
             continue
-        logger.info(f"Using class '{alias}' from current module: {cls.__class__.__name__}, module name: {__name__}")
+        logger.info(f"Using class '{alias}', module name: {__name__}")
         kwargs = dict(cfg.kwargs) if getattr(cfg, "kwargs", None) else {}
         loss_fn = cls(**kwargs)
         losses[alias] = {"loss_fn": loss_fn, "weight": weight}

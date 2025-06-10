@@ -19,7 +19,7 @@ class Precision:
         self.kwargs = kwargs if kwargs else {}
 
     def __call__(self, y_true, y_pred):
-        return precision_score(y_true, y_pred, **self.kwargs)
+        return precision_score(y_true, y_pred, zero_division=0, **self.kwargs)
 
 
 class Recall:
@@ -27,7 +27,7 @@ class Recall:
         self.kwargs = kwargs if kwargs else {}
 
     def __call__(self, y_true, y_pred):
-        return recall_score(y_true, y_pred, **self.kwargs)
+        return recall_score(y_true, y_pred, zero_division=0, **self.kwargs)
 
 
 class F1Score:
