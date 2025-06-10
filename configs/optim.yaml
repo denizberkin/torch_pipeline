@@ -1,7 +1,0 @@
-optim:
-  name: Adam
-  lr: 4.e-4
-  kwargs:  # fill w.r.t. chosen optimizer
-    betas: [0.9, 0.999]
-    eps: 1e-08
-    weight_decay: 0.01

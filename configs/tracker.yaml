@@ -1,7 +1,0 @@
-tracker:
-  enabled: true
-  name: mlflow
-  experiment_name: exp01
-  port: 5000
-  kwargs:
-    mlflow_arg: 1

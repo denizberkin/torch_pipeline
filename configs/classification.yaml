@@ -1,0 +1,73 @@
+seed: 42
+device: cpu
+experiment_name: exp004
+
+train:
+  epochs: 5
+  task: classification
+  log_interval: 10
+  save_interval: 1
+  plot: true
+
+logging:
+  enabled: true
+  level: INFO
+  log_file: exp.log
+
+data:
+  name: mnist
+  root: /data/datasets
+  batch_size: 32
+  val_split: 0.2
+  # kwargs is passed to your instance of BaseDataset, define as you like
+  kwargs:
+    val_split: 0.2
+    random_state: 42
+
+model:
+  name: low_rank_model
+  pretrained: false
+  pretrained_path: null  # only fill if pretrained is true
+  kwargs:
+    in_features: 784
+    hidden_size: [128, 64]
+    out_features: 10
+    rank: 1
+
+optim:
+  name: adam
+  lr: 1.e-3
+  kwargs:  # fill w.r.t. chosen optimizer
+    betas: [0.9, 0.999]
+    eps: 1e-08
+    weight_decay: 0.01
+  scheduler:
+    name: exponential_lr
+    kwargs: 
+      gamma: 0.99
+
+# for predefined losses, see: /losses/build.py
+losses:
+  - name: ce
+    weight: 1.0
+  - name: focal_loss
+    weight: 0.2
+
+metrics:
+  - name: accuracy
+  - name: precision
+    kwargs:
+      average: weighted
+  - name: recall
+    kwargs:
+      average: weighted
+  - name: f1
+    kwargs:
+      average: weighted
+
+tracker:
+  enabled: false
+  name: mlflow
+  port: 5000
+  kwargs:
+    mlflow_arg: 1

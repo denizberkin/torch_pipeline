@@ -1,6 +1,0 @@
-# for predefined losses, see: /losses/build.py
-losses:
-  - name: ce
-    weight: 1.0
-  - name: focal_loss
-    weight: 0.2

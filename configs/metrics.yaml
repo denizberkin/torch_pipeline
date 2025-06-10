@@ -1,8 +1,0 @@
-metrics:
-  - name: accuracy
-  - name: precision
-  - name: recall
-  - name: f1
-    kwargs:
-      average: macro
-  

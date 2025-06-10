@@ -1,7 +1,0 @@
-seed: 42
-device: cpu
-
-train:
-  epochs: 10
-  log_interval: 10
-  save_interval: 1

@@ -1,5 +1,0 @@
-logging:
-  enabled: true
-  level: INFO
-  log_dir: output/logs  # filename will be {experiment_name}.log
-  # log_file: exp.log
