@@ -1,11 +1,6 @@
-from typing import Dict
+from typing import Dict, List
 
-from torchmetrics import (
-    MeanAbsoluteError,
-    MeanAbsolutePercentageError,
-    MeanSquaredError,
-    NormalizedRootMeanSquaredError,
-)
+from torchmetrics import MeanAbsoluteError, MeanAbsolutePercentageError, MeanSquaredError, NormalizedRootMeanSquaredError
 from torchmetrics.detection import IntersectionOverUnion, MeanAveragePrecision
 from torchmetrics.segmentation import MeanIoU
 from torchmetrics.text import EditDistance
@@ -14,12 +9,11 @@ from metrics.sklearn_wrapper import Accuracy, F1Score, Precision, Recall
 from utils.constants import METRICS_DIR
 from utils.logger import get_logger
 from utils.utils import find_class_by_alias
+from utils.schema import MetricConfig
 
 
-def build_metrics(cfg_list) -> Dict[str, object]:
-    """
-    Build the metrics module.
-    """
+def build_metrics(cfg_list: List[MetricConfig]) -> Dict[str, object]:
+    """ Build the metrics module. """
     logger = get_logger()
     metrics = {}
     for cfg in cfg_list:
