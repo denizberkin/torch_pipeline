@@ -1,5 +1,6 @@
 # file extensions
 *.pyc
+*.pt
 *.pth
 *.png
 *.csv
@@ -9,9 +10,9 @@
 
 
 # folders
-*/__pycache__
+**/__pycache__
 /data/datasets
 /data/pretrained_models
-/outputs
+/output
 /.mypy_cache
 /.vscode
