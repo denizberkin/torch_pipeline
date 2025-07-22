@@ -1,11 +1,11 @@
 seed: 1337
 device: cpu
-experiment_name: demo
+experiment_name: seg_demo
 
 train:
   epochs: 2
-  task: classification
-  log_interval: 10
+  task: segmentation
+  log_interval: 2
   save_interval: 1
   plot: true
 
@@ -15,7 +15,7 @@ logging:
   log_file: exp.log
 
 data:
-  name: mnist
+  name: voc_segmentation
   root: /data/datasets
   batch_size: 32
   # kwargs is passed to your instance of BaseDataset, define as you like
@@ -24,22 +24,12 @@ data:
     random_state: 42
 
 model:
-  - name: dnn3_lowrank
+  - name: unet
     # name: complex_low_rank_model
     pretrained: false
     pretrained_path: null  # only fill if pretrained is true
     kwargs:
-      in_channels: 784
-      hidden_size: [128, 32]
-      out_channels: 10
-      rank: 3
-  - name: linear_model
-    pretrained: false
-    pretrained_path: null
-    kwargs:
-      in_channels: 784
-      hidden_size: [128, 32]
-      out_channels: 10
+      null
       
 
 optim:
