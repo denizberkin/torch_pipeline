@@ -13,12 +13,10 @@ class BaseModel(nn.Module, ABC):
     - `get_trainable_params`: Returns the num of trainable parameters in the model.
     """
     def __init__(self):
-        super(BaseModel, self).__init__()
+        super().__init__()
     
     @abstractmethod
     def forward(self, x): raise NotImplementedError
     def get_alias(self) -> str: return "base"
-
     def get_num_params(self) -> int: return sum(p.numel() for p in self.parameters())
-
     def get_trainable_params(self) -> int: return sum(p.numel() for p in self.parameters() if p.requires_grad)
