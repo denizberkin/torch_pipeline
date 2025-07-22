@@ -10,6 +10,9 @@ import matplotlib.pyplot as plt
 
 from metrics.base import BaseMetric
 from utils.logger import get_logger
+from models.base import BaseModel
+from schedulers.base import BaseScheduler
+from trackers.base import BaseTracker
 
 
 class BaseTrainer(ABC):
@@ -30,16 +33,15 @@ class BaseTrainer(ABC):
     - `average_metrics`: Method to average the metrics over the `self.metrics_history`.
     - `__call__`: Method to call the trainer.
     """
-
     def __init__(
         self,
-        model: nn.Module,
-        optimizer: torch.optim.Optimizer,
+        model: nn.Module | BaseModel,
+        optimizer: torch.optim.Optimizer | List[torch.optim.Optimizer],
         losses: nn.Module,
         metrics: Dict[str, Dict[str, BaseMetric]],
         device: torch.device,
-        tracker=None,
-        scheduler=None,
+        tracker: BaseTracker=None,
+        scheduler: BaseScheduler | List[BaseScheduler]=None,
         **kwargs,
     ) -> None:
         # optimizer, losses,
@@ -53,6 +55,7 @@ class BaseTrainer(ABC):
         self.kwargs = kwargs
 
         # init
+        self.batch_sizes = []
         self.metrics_per_epoch = defaultdict(list)
         self.metrics_history = defaultdict(list)  # 
         self.losses_per_epoch = defaultdict(list)
@@ -64,6 +67,21 @@ class BaseTrainer(ABC):
     @abstractmethod
     def validate(self, dataloader: torch.utils.data.DataLoader): raise NotImplementedError
     def get_alias(self) -> str: return "base"  # must be re-defined by child class
+    def test(self, dataloader: torch.utils.data.DataLoader): return self.validate(dataloader)  # overwrite if possible
+
+    def save_model(self, folder: str, filename: str = "default_model.pth") -> bool:
+        """
+        Save the model
+        ### Parameters
+        - `folder`: Folder to save the model
+        - `filename`: filename to save the model, defaults to "default_model.pth" 
+        """
+        if not os.path.exists(folder):
+            os.makedirs(folder)
+        if os.path.splitext(filename)[-1] == "":
+            filename += ".pth"  # if no extension, add .pth
+        get_logger().info(f"Model {self.model.get_alias()} saved at {os.path.join(folder, filename)}")
+        torch.save(self.model.state_dict(), os.path.join(folder, filename))
 
     # Loss related
     def compute_loss(self, preds: torch.Tensor, targets: torch.Tensor) -> torch.Tensor:
@@ -138,7 +156,7 @@ class BaseTrainer(ABC):
             self.average_losses()
             train_metrics = self.average_metrics()
             pb.set_postfix(**train_metrics)
-            
+
             self._reset_metric_history()
             self.validate(val_loader)
             val_metrics = self.average_metrics()
@@ -147,20 +165,21 @@ class BaseTrainer(ABC):
             if self.exp_tracker and epoch % log_interval == 0:
                 logger.info(f"Logging metrics for epoch {epoch}.")
                 self.exp_tracker.log_epoch(epoch, self.metrics_history)
-            
-            logger.info(f"Epoch {epoch + 1} - Train Metrics: {train_metrics}")
-            logger.info(f"Epoch {epoch + 1} - Validation Metrics: {val_metrics}")
+
+            train_metrics_fmt = ", ".join([f"'{k}': {v:.4f}" for k, v in train_metrics.items()])
+            val_metrics_fmt = ", ".join([f"'{k}': {v:.4f}" for k, v in val_metrics.items()])
+            logger.info(f"Epoch {epoch + 1} - Train Metrics: {train_metrics_fmt}")
+            logger.info(f"Epoch {epoch + 1} - Validation Metrics: {val_metrics_fmt}")
         if plot:
             self.plot_metrics(experiment_name=experiment_name)
         logger.info("Training completed.")
 
     def plot_metrics(self, experiment_name: str = "dummy") -> None:
-        folder = os.path.join("output", experiment_name, "plots")
+        folder = os.path.join("output", experiment_name, self.model.get_alias(), "plots")
         if not os.path.exists(folder):
             os.makedirs(folder)
 
-        logger = get_logger()
-        logger.info("Plotting metrics...")
+        get_logger().info("Plotting metrics...")
         for name, values in self.metrics_per_epoch.items():
             self.plot_stats(xlabel="epochs", ylabel=name + "_epoch", stats=values, dir=folder)
         for name, values in self.losses_per_epoch.items():
