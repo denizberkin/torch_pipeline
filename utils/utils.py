@@ -1,7 +1,9 @@
-import importlib
-import inspect
 import os
+import re
+import inspect
+import importlib
 from typing import Optional
+
 
 from utils.logger import get_logger
 
@@ -19,12 +21,14 @@ def find_class_by_alias(alias: str, dir: str) -> Optional[object]:
     """
     logger = get_logger()
     found = None
-    for fn in os.listdir(dir):
+    files = {fn: cur_dir for cur_dir, _, file_list in os.walk(dir) for fn in file_list}
+    
+    for fn, cd in files.items():
         if fn.startswith("__") or fn in {"base.py", "build.py"} or not fn.endswith(".py"):
             continue  # pass unnecessary files
 
-        f, ext = os.path.splitext(fn)
-        module_name = f"{dir}.{f}"
+        f, _ = os.path.splitext(fn)
+        module_name = f"""{'.'.join(re.split(r"[\\/]+", cd))}.{f}"""  # check sub-modules iteratively
         try:
             module = importlib.import_module(module_name)
         except ImportError as e:

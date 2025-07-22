@@ -19,3 +19,9 @@ def set_seeds(seed: int = 42) -> None:
     # probably drops performance, but ensures ~deterministic behaviour on low-level ops, uncomment to use
     # torch.backends.cudnn.deterministic = True
     # torch.backends.cudnn.benchmark = False
+
+
+def set_print_options():
+    np.set_printoptions(precision=3, suppress=True, linewidth=120)
+    torch.set_printoptions(precision=3, sci_mode=False, linewidth=120)
+    

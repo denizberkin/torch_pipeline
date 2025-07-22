@@ -27,7 +27,6 @@ class DatasetConfig:
     name: str
     root: str
     batch_size: int
-    val_split: Optional[float]
     kwargs: Optional[Dict[str, Any]] = None
 
 
@@ -79,7 +78,7 @@ class ConfigSchema:
     metrics: List[MetricConfig]
     data: DatasetConfig
     optim: OptimConfig
-    model: ModelConfig
+    model: List[ModelConfig]
     tracker: ExperimentTrackerConfig
     train: TrainConfig
     experiment_name: Optional[str] = None
