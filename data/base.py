@@ -13,7 +13,6 @@ class BaseDataset(Dataset, ABC):
         - `__len__` (required): return dataset length, expected by pytorch.
         - `collate_fn` (optional): Method to customize how batches are collated.
     """
-
     def __init__(self, data_dir: str, _type: str):
         super().__init__()
         self.data_dir = data_dir
@@ -27,6 +26,5 @@ class BaseDataset(Dataset, ABC):
 
     @abstractmethod
     def __len__(self): raise NotImplementedError
-
     def get_alias(self): return "base"
     def collate_fn(self, batch): return batch

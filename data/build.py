@@ -20,4 +20,3 @@ def build_data_loaders(config: DatasetConfig, _type: str) -> DataLoader:
     logger.info(f"Using {config.name} {_type} set, module name: {__name__}")
     shuffle = True if _type == "train" else False
     return DataLoader(dataset=dataset, batch_size=config.batch_size, shuffle=shuffle)
-
