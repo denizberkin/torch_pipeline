@@ -13,7 +13,5 @@ torchvision==0.22.0
 torchmetrics==1.7.1
 tqdm==4.67.1
 
-# if you want linting & formatting, else comment out
-pre_commit==4.2.0
-black==25.1.0
-isort==6.0.1
+# segmentation, mammograms?
+# pydicom==3.0.1
