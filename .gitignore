@@ -10,6 +10,7 @@
 
 
 # folders
+*/__pycache__
 **/__pycache__
 /data/datasets
 /data/pretrained_models
