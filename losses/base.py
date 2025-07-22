@@ -9,7 +9,6 @@ class BaseLoss(ABC):
         - `get_alias` (required): return loss alias to match with config.
         - `__call__` (required): compute and return loss given targets and preds.
     """
-
     @abstractmethod
     def __call__(self): raise NotImplementedError
     def get_alias(self): return "base"

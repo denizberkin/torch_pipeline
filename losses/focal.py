@@ -1,5 +1,5 @@
 import torch
-import torch.nn as nn
+from torch.nn.functional import cross_entropy
 
 from losses.base import BaseLoss
 
@@ -11,9 +11,7 @@ class FocalLoss(BaseLoss):
         self.kwargs = kwargs
 
     def __call__(self, inputs, targets):
-        ce_loss = nn.functional.cross_entropy(inputs, targets, reduction="none")
-        pt = torch.exp(-ce_loss)
-        return ((1 - pt) ** self.gamma * ce_loss).mean()
+        ce_loss = cross_entropy(inputs, targets, reduction="none")
+        return ((1 - torch.exp(-ce_loss))**self.gamma * ce_loss).mean()
 
-    def get_alias(self):
-        return "focal_loss"
+    def get_alias(self): return "focal_loss"

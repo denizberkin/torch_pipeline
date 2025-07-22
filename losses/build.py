@@ -1,11 +1,14 @@
+from typing import List
+
 import torch.nn as nn
 
 from utils.constants import LOSSES_DIR
 from utils.logger import get_logger
 from utils.utils import find_class_by_alias
+from utils.schema import LossConfig
 
 
-def build_loss(cfg_list) -> dict:
+def build_loss(cfg_list: List[LossConfig]) -> dict:
     """
     Build a dictionary of loss functions from loss config
     ### Parameters
@@ -37,4 +40,5 @@ PREDEFINED_LOSSES = {
     "bce": nn.BCELoss,  # bce
     "bce_with_logits": nn.BCEWithLogitsLoss,  # bce + sigmoid
     "mse": nn.MSELoss,
+    "kldiv": nn.KLDivLoss,
 }
