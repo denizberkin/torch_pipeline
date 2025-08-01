@@ -2,6 +2,9 @@ import numpy as np
 
 
 def visualize_mask_cli(mask: np.ndarray, width: int=80, charset=" ░▒▓█"):
+    """
+    Visualize 2D uint8 image in terminal
+    """
     if mask.ndim != 2 or mask.dtype != np.uint8:
         raise ValueError("invalid input for visualization in cli")
     
@@ -21,19 +24,21 @@ def visualize_mask_cli(mask: np.ndarray, width: int=80, charset=" ░▒▓█")
             t, b = int(top // (255 / levels)), int(bottom // (255 / levels))
             # print("t:", top, levels, t)
             # print("b:", bottom, levels, b)
-            top_char = charset[t]
-            bottom_char = charset[b]
+            # top_char = charset[t]
+            # bottom_char = charset[b]
             avg = (int(top) + int(bottom)) // 2
             line += charset[int(avg * levels // 255)]
         print(line)
 
-charset1 = ".:-=+*#%@"
-charset2 = " ░▒▓█"
-charset3 = " ▁▂▃▄▅▆▇█"
-charset4 = " ▏▎▍▌▋▊▉█"
 
-test_image = np.tile(np.linspace(0, 255, 40, dtype=np.uint8), (20, 1))
-visualize_mask_cli(test_image, 
-                   charset=charset2
-                   )
-print(test_image.shape)
+
+if __name__ == "__main__":
+    charset1 = ".:-=+*#%@"
+    charset_smooth = " ░▒▓█"
+    charset3 = " ▁▂▃▄▅▆▇█"
+    charset4 = " ▏▎▍▌▋▊▉█"
+    
+    H, W = 20, 40
+    test_image = np.tile(np.linspace(0, 255, W, dtype=np.uint8), (H, 1))
+    visualize_mask_cli(test_image, charset=charset_smooth)
+    print(test_image.shape)

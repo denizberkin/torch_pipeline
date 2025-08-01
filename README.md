@@ -1,53 +1,72 @@
-## This repo aims to create a pipeline to evaluate, compare and try on complex and compressed neural network methods.
+## This repo aims to create a pipeline to evaluate, compare and <del> try on complex and compressed </del> evaluate neural network methods.
 
-Said pipeline should not be limited to evaluating a set of spesific networks instead it needs to aim for independant modules,
-which could get changed/replaced without breaking other available modules.
+### NOTE: Consider updating checks to allow submodules within the `models` folder. Organizing models by task can help reduce the number of `.py` files in a single directory.
 
+The pipeline should support modularity, enabling independent modules that can be swapped or updated without affecting others.
+
+<b>Directory structure:</b>
 ```
-my_nn_pipeline/
-│
-├── configs/
-│   └── ...
-├── data/
-│   ├── __init__.py
-│   └── build.py
-│   └── ...
-├── evaluator/
-│   ├── __init__.py
-│   ├── build.py
-│   └── ...
-├── experiments/
-│   ├── __init__.py
-│   └── mlflow.py
-├── losses/
-│   ├── __init__.py
-│   ├── build.py
-│   └── ...
-├── metrics/
-│   ├── __init__.py
-│   ├── build.py
-│   └── ...
-├── models/
-│   ├── __init__.py
-│   ├── build.py
-│   └── ...
-├── optimizers/
-│   ├── __init__.py
-│   ├── build.py
-│   └── ...
-├── scripts/                # maybe to launch jobs (future work)
-│   └── ...
-├── trainer/
-│   ├── __init__.py
-│   ├── trainer.py          # base trainer class
-│   └── ...
-├── utils/                  # logger, seed etc. utility
-│   ├── logger.py
-│   ├── seed.py
-│   ├── checkpoint.py
-│   └── ...
-│
-├── requirements.txt
-├── main.py (setup.py)
-└── README.md
+└── denizberkin-torch_pipeline/
+    ├── README.md
+    ├── clivis.py
+    ├── complexnn.py
+    ├── cosnn.py
+    ├── main.py
+    ├── requirements.txt
+    ├── .pre-commit-config.yaml
+    ├── configs/
+    │   ├── classification.yaml
+    │   ├── detection.yaml
+    │   └── segmentation.yaml
+    │       ...
+    ├── data/
+    │   ├── __init__.py
+    │   ├── base.py
+    │   └── build.py
+    │       ...
+    ├── losses/
+    │   ├── __init__.py
+    │   ├── base.py
+    │   ├── build.py
+    │   └── focal.py
+    ├── metrics/
+    │   ├── __init__.py
+    │   ├── base.py
+    │   ├── build.py
+    │   └── sklearn_wrapper.py
+    ├── models/
+    │   ├── __init__.py
+    │   ├── base.py
+    │   ├── build.py
+    │   ├── classification/
+    │   │   └── ...
+    │   └── segmentation/
+    │       └── ...
+    ├── optimizers/
+    │   ├── __init__.py
+    │   └── build.py
+    │       ...
+    ├── schedulers/
+    │   ├── __init__.py
+    │   ├── base.py
+    │   └── build.py
+    │       ...
+    ├── trackers/
+    │   ├── __init__.py
+    │   └── base.py
+    │       ...
+    ├── trainer/
+    │   ├── __init__.py
+    │   ├── base.py
+    │   ├── build.py
+    │   └── trainer.py
+    │       ...
+    └── utils/
+        ├── config.py
+        ├── constants.py
+        ├── logger.py
+        ├── perf.py
+        ├── schema.py
+        ├── seed.py
+        └── utils.py
 ```
