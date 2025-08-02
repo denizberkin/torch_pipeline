@@ -1,23 +1,17 @@
 import numpy as np
 
 
-def visualize_mask_cli(mask: np.ndarray, width: int=80, charset=" ░▒▓█"):
+def visualize_mask_cli(mask: np.ndarray, charset=" ░▒▓█"):
     """
     Visualize 2D uint8 image in terminal
     """
     if mask.ndim != 2 or mask.dtype != np.uint8:
         raise ValueError("invalid input for visualization in cli")
     
-    h, w = mask.shape
-    aspect_ratio = h / w
-    nh, nw = int(aspect_ratio * width * 0.5), width
-    resized = np.resize(mask, (nw, nh * 2))
-    
     levels = len(charset) - 1
-
-    for i in range(0, resized.shape[0] - 1, 2):
-        top_row = resized[i]
-        bottom_row = resized[i + 1]
+    for i in range(0, mask.shape[0] - 1, 2):
+        top_row = mask[i]
+        bottom_row = mask[i + 1]
         line = ""
         for top, bottom in zip(top_row, bottom_row):
             # print(top, bottom)
@@ -29,7 +23,6 @@ def visualize_mask_cli(mask: np.ndarray, width: int=80, charset=" ░▒▓█")
             avg = (int(top) + int(bottom)) // 2
             line += charset[int(avg * levels // 255)]
         print(line)
-
 
 
 if __name__ == "__main__":
