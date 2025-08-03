@@ -72,7 +72,9 @@ model:
 You can pass any arguments to the kwargs section but your module must define the `**kwargs` parameter in the `__init__` method. Check [config schema](utils/schema.py) or [example config](configs/classification.yaml) for details.
 <br>
 <br>
+
 # **Directory structure:**
+
 ```
 └── denizberkin-torch_pipeline/
     ├── README.md
