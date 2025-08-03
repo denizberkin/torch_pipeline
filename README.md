@@ -38,12 +38,15 @@ python main.py --config configs/$your_config_filename.yaml
 python main.py --config classification.yaml  # it still checks configs/ folder 
 ```
 > [!NOTE] 
-There are already some pre-defined configs in the `configs/` folder, you can play around with them as well. <br>
+There are already some pre-defined configs in the `configs/` folder, you can play around with them as well. 
+<br>
 
 # Adding a new module
 To create a new module, you can check `/base.py` file in the respective folder. It will contain the base class for the module and what methods to be implemented. <br>
 > [!NOTE] 
-Without exception, all modules will require a `get_alias` method which helps to identify the module from the config file. <br><br>
+Without exception, all modules will require a `get_alias` method which helps to identify the module from the config file. 
+<br>
+
 ### Example of defining a new model;
 1. check [base.py](models/base.py) to see what methods need to be implemented
 2. create module file `models/<task_type>/<model_file>.py`
