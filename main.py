@@ -14,6 +14,7 @@ from utils.config import load_config
 from utils.logger import get_logger, log_timeit
 from utils.schema import ConfigSchema
 from utils.seed import set_seeds
+from utils.parse import args_parser, config_parser
 
 set_seeds(1337)
 
@@ -58,15 +59,6 @@ def main(config: ConfigSchema):
     
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument("cfg", help="path to yaml within configs/ folder")
-    args = parser.parse_args()
-
-    try:  # either provide path or filename within configs folder 
-       config: ConfigSchema = load_config(args.cfg, strict=True)
-    except FileNotFoundError as e:
-        conf_folder = os.path.join(os.path.dirname(__file__), "configs")
-        config_fn = os.path.join(conf_folder, args.cfg)
-        config: ConfigSchema = load_config(config_fn, strict=True)
-
+    args = args_parser()
+    config = config_parser(args.config)
     main(config)
