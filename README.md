@@ -143,3 +143,14 @@ You can pass any arguments to the kwargs section but your module must define the
         ├── seed.py
         └── utils.py
 ```
+
+
+# Necessary additions
+- [ ] Add functions to check modules currently available (models, optims, losses, metrics etc.)
+- [ ] Add mixed precision training support
+- [ ] Add augmentation module, custom augmentation support
+- [ ] Add experiment tracking support (initially mlflow)
+- [ ] Add huggingface datasets support
+- [ ] Add huggingface models support
+- [ ] Update current experiment artifacts & save logic, it is messy code
+- [ ] Fix [pascalvoc](data/pascalvoc.py) dataloader
